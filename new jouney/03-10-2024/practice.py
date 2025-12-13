@@ -196,7 +196,7 @@ def update(node,key,value):
 
 def balance_bst(node):
     if node is None:
-        return true,0
+        return True,0
     balancel,heightl = balance_bst(node.left)
     balancer,heightr = balance_bst(node.right)
     balance = balancel and balancer and((heightl - heightr)<=1 )
@@ -210,11 +210,14 @@ def make_balced_bst(arr,lo=0,hi=None,parent=None):
     if hi is None:
         hi = len(arr) -1
     if lo > hi:
-        return None:
+        return None
     mid = (lo + hi) //2
     key,value = arr[mid]
     root = BstNode(key,value)
     root.parent = parent
-    root.left = make_balced_bst(arr,lo,hi= mid -1,root)
+    root.left = make_balced_bst(arr,lo,root,hi= mid -1)
     root.right= make_balced_bst(arr,mid+1,hi,root)
     return root
+
+
+def
