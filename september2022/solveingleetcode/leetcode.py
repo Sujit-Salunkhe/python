@@ -47,4 +47,63 @@ def countOdds2(low,high):
 # print(countOdds2(2,10))
 # print(countOdds2(3,12))
 # print(countOdds2(8,10))
-print(countOdds(3,7))
+# print(countOdds(3,7))
+
+nums1= [9,4,5,3,2,1,3]
+
+# def smallerNumbersThanCurrent(nums):
+#     numbers=[]
+#     for i in nums:
+#         big=0
+#         for j in nums:
+#             if i > j:
+#                 big+=1
+#         numbers.append(big)
+#     return numbers
+
+
+# print(smallerNumbersThanCurrent(nums1))
+
+nums=7
+# a = str(nums)[0]
+# print(type(a))
+# print(type,"s")
+
+
+def countDigits(num):
+    mystr = str(num)
+    count = 0
+    for i in mystr:
+        if i == 0:
+            pass
+        if num % int(i) == 0:
+            count +=1
+    return count
+            
+# print(countDigits(nums))
+
+def countDigits2(num):
+    count = 0
+    temp = num
+    
+    while temp>0:
+        r = temp  % 10
+        if num % r == 0 :
+            count +=1
+        temp //= 10
+    return count
+    
+# print(countDigits2(nums))
+
+
+def factorial(n):
+    if n == 1:
+        return 1
+    return n*factorial(n-1)
+
+def fib(n):
+  if n == 0 or n==1:
+      return n
+  return fib(n-1) + fib(n-2)
+
+print(fib(3))
