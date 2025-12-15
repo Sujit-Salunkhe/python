@@ -24,6 +24,14 @@ class Graph:
         self.num_nodes -= 1
         del self.data[deleteNode]
     
+    
+    
+    
+    
+    
+    
+    
+    
     def bfs(graphe,root):
         queue =[]
         discovered =[False] * len(graphe.data)
@@ -42,7 +50,23 @@ class Graph:
                     discovered[node] = True
                     
                     queue.append(node)
- 
+    # tracking parent task
+    # make cycle graphe and detect cycle in  a graphe
+    def dfs(graphe,root):
+        stack = []
+        result =[]
+        discovered = [False] * len(graphe.data)
+        stack.append(root)
+        while len(stack) > 0:
+            current = stack.pop()
+            if not discovered[current]:
+                discovered[current] = True
+                result.append(current)
+            for node in graphe.data[current]:
+                if not discovered[node]:
+                    stack.append(node)
+        return result  
+                
 garph1 = Graph(num_nodes,edges)
 
 
@@ -63,3 +87,45 @@ while a > 0:
     a -=1
     v+=2
 
+
+
+# weighted graph
+weighted_num_nodes = 9
+weighted_edges =[(0,1,3),(0,3,2),(0,8,4),(1,7,4),(2,7,2),(2,3,6),(2,5,1),(3,4,1),(4,8,8),(5,6,8)]
+print(len(weighted_edges))
+
+# directed Graph
+directed_num_nodes =5
+directed_edges =[(0,1),(1,2),(2,3),(2,4),(4,2),(3,0)]
+directed = True
+
+# main graphe directed and weighted
+
+class Graphe2:
+    def __init__(self,num_of_nodes,edges,directed = False,weighted = False):
+        self.num_of_nodes = num_of_nodes
+        self.directed = directed
+        self.weighted = weighted
+        self.data = [[] for _ in range(num_of_nodes)]
+        self.weight = [[] for _ in range(num_of_nodes)]
+        for edge in edges:
+            if self.weighted:
+                node1,node2,weight = edge
+                self.data[node1].append(node2)
+                self.weight[node1].append(weight)
+                if not directed:
+                    self.data[node2].append(node1)
+                    self.weight[node2].append(weight)
+            else:
+                node1,node2 = edge
+                self.data[node1].append(node2)
+                if not directed:
+                    self.data[node2].append(node1)
+                    
+                
+    def __repr__(self) -> str:
+        result = ''
+        for 
+        return result
+        
+        
