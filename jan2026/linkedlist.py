@@ -91,4 +91,20 @@ def FindaLowestValue(head):
        currentNode = currentNode.next
     return minvalue
 
-print(FindaLowestValue(node1))
+# print(FindaLowestValue(node1))
+
+def findandDelete(head,value):
+    currentNode = head.next
+    prevNode = head
+    if head.data == value:
+        return head.next
+    while currentNode:
+        if currentNode.data == value:
+            prevNode.next = currentNode.next
+        prevNode = currentNode
+        currentNode = currentNode.next
+    return head
+
+newNode = findandDelete(node1,-1)        
+
+traversenode(newNode)
