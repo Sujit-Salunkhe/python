@@ -1,7 +1,6 @@
-
-from  fastapi import FastAPI 
-from fastapi import HTTPException
-
+from fastapi import FastAPI, HTTPException, Response
+import random
+from typing import Any
 app = FastAPI(root_path="/api/v1")
 
 data = [
@@ -67,24 +66,73 @@ data = [
     }
 ]
 
-
 @app.get('/')
 async def root():
-    return {"message: hello World"}
+    return {"message": "hello World"}  
+
+@app.get('/campaigns')  
+async def read_campaigns():  
+    return data  
+
+@app.get('/campaigns/{id}')  
+async def read_campaign_id(id: str):  
+    for campaign in data:
+        if campaign.get("campaign_id") == id:
+            return campaign  
+    raise HTTPException(404, "We don't have such data")  
 
 
-@app.get('/camgaigns')
-async def read_capaigns():
-    return (f"campaigns:${data}")
+@app.post("/campaigns")
+async def create_campaign(body: dict[str,Any]):
+  print(body,"body")
+  new:Any = {
+        "campaign_id": random.randint(100,1001),
+        "name": body.get("name"),
+        "due_date":body.get("due_date"),
+        "created_at": "2026-01-10T09:30:00Z",
+        "status": "active",
+        "budget": 25000,
+        "clicks": 12450,
+        "impressions": 156789,
+        "conversions": 342,
+        "platform": "Google Ads"
+    }
+  data.append(new)
+
+  return {"campaign":data}
 
 
-@app.get('/camgaigns/{id}')
-async def read_campains_id(id):
-    for campaingn in data:
-        if campaingn.get("campaign_id") == id:
-            return {f"campaing:${id}"}
-    return HTTPException(status_code=404)
+
+@app.put('/campaigns/{id}')
+async def update_campaign(id: int, body:dict[str,Any]):  
+
+    
+    for index, campaign in enumerate(data):
+        if campaign.get('campaign_id') == str(id):  
+            updated: Any = {
+                "campaign_id": str(id),
+                "name": body.get("name", campaign.get("name")), 
+                "due_date": body.get("due_date", campaign.get("due_date")),
+                "created_at": campaign.get("created_at"),  
+                "status": body.get("status", campaign.get("status")),
+                "budget": body.get("budget", campaign.get("budget")),
+                "clicks": campaign.get("clicks"),
+                "impressions": campaign.get("impressions"),
+                "conversions": campaign.get("conversions"),
+                "platform": body.get("platform", campaign.get("platform"))
+            }
+            
+            data[index] = updated
+            return updated 
+    
+    raise HTTPException(404, "Campaign not found")  
 
 
-
-
+@app.delete('/campaigns/{id}')
+async def update_campaign(id: int):
+    for index,campaign in enumerate(data):
+        if campaign.get("campaign_id") == str(id):
+            data.pop(index)
+           
+            return  {"message": "updated successfully", "campaign_id": id}
+    raise HTTPException(404,"Not Found")
