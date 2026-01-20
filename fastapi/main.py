@@ -95,7 +95,7 @@ async def read_campaigns(session:SessionDep):
 async def root():
     return {"message": "hello World"}  
 
-@app.get('/campaigns/{id}',respons_model=Response[Campaign])
+@app.post('/campaigns/{id}',response_model= Response[Campaign])
 async def read_campaign(id:int,session:SessionDep):
     data = session.get(Campaign,id)
     if not data:
