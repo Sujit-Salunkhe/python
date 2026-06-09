@@ -1,0 +1,73 @@
+Sub BrokerCount_check() 'Check total updated broker count
+Dim ws As Worksheet
+Dim startCol As Long, endCol As Long
+Dim msg As String
+Dim matchCount As Long
+Dim cellList() As String ' Declare as a dynamic array of Strings
+Dim formulaTarget As Range
+Set ws = Application.ActiveSheet ' Update sheet name if needed
+ActiveSheet.Outline.ShowLevels RowLevels:=8, ColumnLevels:=8
+Application.ScreenUpdating = False
+Application.EnableEvents = False
+Application.DisplayAlerts = False
+Application.Calculation = xlCalculationManual
+startCol = 0
+endCol = 0
+foundFirst = False
+lastRow = ws.Cells.Find(What:="*", SearchOrder:=xlByRows, SearchDirection:=xlPrevious).row
+endCol = ws.Cells.Find(What:="*", SearchOrder:=xlByColumns, SearchDirection:=xlPrevious).Column
+    ' Find the start and end columns based on the Green color
+'    For col = 1 To ws.UsedRange.Columns.Count
+'        If ws.Cells(9, col).Interior.Color = RGB(0, 128, 0) Then
+'            If Not foundFirst Then
+'                startCol = col
+'                scol = ws.Cells(9, col).address(False, False)
+'                foundFirst = True
+'            End If
+'            Endcol = col
+'            ecol = ws.Cells(9, col).address(False, False)
+'        End If
+'    Next col
+
+    matchCount = 0
+    ' Initialize the array with zero elements
+    ReDim cellList(0)
+    nEndRow = ws.Cells.Find("*", SearchOrder:=xlByRows, LookIn:=xlFormulas, SearchDirection:=xlPrevious).row
+    Columnfind = ws.Cells.Find("InConfig_LTCode", SearchOrder:=xlByColumns, LookIn:=xlFormulas, SearchDirection:=xlPrevious).Column
+
+    On Error Resume Next
+    nColBCNT = ws.Cells.Find("InConfig_BCNT", SearchOrder:=xlByColumns, LookIn:=xlFormulas, SearchDirection:=xlPrevious).Column
+    If nColBCNT = "" Or nColBCNT = Empty Then
+        ws.Columns(Columnfind - 4).Insert Shift:=xlToRight, CopyOrigin:=xlFormatFromLeftOrAbove
+        ws.Cells(5, Columnfind - 4).value = "InConfig_BCNT"
+        nColBCNT = ws.Cells.Find("InConfig_BCNT", SearchOrder:=xlByColumns, LookIn:=xlFormulas, SearchDirection:=xlPrevious).Column
+    End If
+   ' Loop through columns
+
+    For rowchek = 15 To nEndRow
+        For i = 3 To endCol
+            If ws.Cells(9, i).Interior.Color = RGB(0, 128, 0) Then
+                ' Check if cell in row 6 column i is white (RGB(255,255,255))
+                On Error Resume Next
+                cellValue = ws.Cells(rowchek, i).value
+                If ws.Cells(6, i).Interior.Color <> 255 And ws.Cells(rowchek, i).value <> "" And IsNumeric(cellValue) Then
+                    ' Resize array to add new element
+                    If matchCount = 0 Then
+                        ' First element
+                        cellList(0) = ws.Cells(rowchek, i).address(False, False)
+                    Else
+                        ReDim Preserve cellList(0 To matchCount)
+                        cellList(matchCount) = ws.Cells(rowchek, i).address(False, False)
+                    End If
+                    matchCount = matchCount + 1
+                End If
+            End If
+        Next i
+        ws.Cells(rowchek, nColBCNT).value = matchCount
+        matchCount = 0
+    Next rowchek
+Application.ScreenUpdating = True
+Application.EnableEvents = True
+Application.DisplayAlerts = True
+Application.Calculation = xlCalculationAutomatic
+End Sub
